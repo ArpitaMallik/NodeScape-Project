@@ -28,8 +28,6 @@ Make sure Docker is installed:
 docker pull arpitamallik23/nodescape-frontend:latest
 
 
-# Run frontend on port 3000
-docker run -d -p 3000:80 arpitamallik23/nodescape-frontend
 ```
 
 Now open your browser and go to:
