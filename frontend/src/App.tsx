@@ -16,7 +16,7 @@ function App() {
   const [isComplete, setIsComplete] = useState(false);
   
   const traversalGeneratorRef = useRef<Generator<TraversalStep> | null>(null);
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const handleCanvasClick = (x: number, y: number) => {
     // Don't add nodes if we're too close to existing ones
@@ -154,6 +154,7 @@ function App() {
               algorithm={algorithm}
               currentStep={currentStep}
               isComplete={isComplete}
+              nodes={graph.nodes.map(node => ({ id: node.id, label: node.label }))}
             />
           </div>
         </div>

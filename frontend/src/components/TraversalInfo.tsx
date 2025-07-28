@@ -5,20 +5,30 @@ interface TraversalInfoProps {
   algorithm: Algorithm;
   currentStep: TraversalStep | null;
   isComplete: boolean;
+  nodes: { id: string; label: string }[];
 }
 
 export const TraversalInfo: React.FC<TraversalInfoProps> = ({
   algorithm,
   currentStep,
-  isComplete
+  isComplete,
+  nodes
 }) => {
+  const getNodeLabel = (nodeId: string) => {
+    return nodes.find(node => node.id === nodeId)?.label || nodeId;
+  };
+
+  const getNodeLabels = (nodeIds: string[]) => {
+    return nodeIds.map(id => getNodeLabel(id));
+  };
   const getQueueStackLabel = () => {
     return algorithm === 'bfs' ? 'Queue' : 'Stack';
   };
 
   const getQueueStackItems = () => {
     if (!currentStep) return [];
-    return algorithm === 'bfs' ? (currentStep.queue || []) : (currentStep.stack || []);
+    const items = algorithm === 'bfs' ? (currentStep.queue || []) : (currentStep.stack || []);
+    return getNodeLabels(items);
   };
 
   return (
@@ -34,7 +44,7 @@ export const TraversalInfo: React.FC<TraversalInfoProps> = ({
               Current Node
             </label>
             <div className="px-3 py-2 bg-red-500/20 border border-red-500/30 rounded-lg text-red-200 font-mono">
-              {currentStep.nodeId || 'None'}
+              {currentStep.nodeId ? getNodeLabel(currentStep.nodeId) : 'None'}
             </div>
           </div>
 
@@ -52,7 +62,7 @@ export const TraversalInfo: React.FC<TraversalInfoProps> = ({
               Visited Nodes
             </label>
             <div className="px-3 py-2 bg-green-500/20 border border-green-500/30 rounded-lg text-green-200 font-mono min-h-[40px]">
-              {currentStep.visited.length > 0 ? currentStep.visited.join(', ') : 'None'}
+              {currentStep.visited.length > 0 ? getNodeLabels(currentStep.visited).join(', ') : 'None'}
             </div>
           </div>
 
@@ -61,7 +71,7 @@ export const TraversalInfo: React.FC<TraversalInfoProps> = ({
               Traversal Path
             </label>
             <div className="px-3 py-2 bg-purple-500/20 border border-purple-500/30 rounded-lg text-purple-200 font-mono min-h-[40px]">
-              {currentStep.path.length > 0 ? currentStep.path.join(' → ') : 'None'}
+              {currentStep.path.length > 0 ? getNodeLabels(currentStep.path).join(' → ') : 'None'}
             </div>
           </div>
 

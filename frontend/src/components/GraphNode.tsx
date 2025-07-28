@@ -35,7 +35,7 @@ export const GraphNode: React.FC<GraphNodeProps> = ({
 
   return (
     <g 
-      className="cursor-pointer transition-all duration-200 hover:scale-110"
+      className="cursor-pointer"
       onClick={onClick}
       onDoubleClick={onDoubleClick}
     >
