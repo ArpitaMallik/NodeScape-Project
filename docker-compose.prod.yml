@@ -1,0 +1,13 @@
+# docker-compose.prod.yml
+version: "3.8"
+
+services:
+  frontend:
+    image: arpitamallik23/nodescape-frontend:latest
+    ports:
+      - "3000:80"
+
+  backend:
+    image: arpitamallik23/nodescape-backend:latest
+    ports:
+      - "5000:5000"
