@@ -36,3 +36,7 @@ jobs:
         context: ./backend
         push: true
         tags: arpitamallik23/nodescape-backend:latest
+    
+    - name: Debug print username
+      run: echo "Docker Hub Username is ${{ secrets.DOCKERHUB_USERNAME }}"
+
