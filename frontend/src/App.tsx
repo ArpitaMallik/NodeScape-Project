@@ -86,6 +86,12 @@ function App() {
     setStartNode(null);
   };
 
+  const handleClearGraph = () => {
+    handleStop();
+    clearGraph();
+    setStartNode(null);
+  };
+
   // Clean up timeout on unmount
   useEffect(() => {
     return () => {
@@ -103,7 +109,7 @@ function App() {
   }, [graph.nodes, startNode]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800">
+    <div className="min-h-screen bg-blue-950">
       <div className="container mx-auto px-6 py-8">
         {/* Header */}
         <div className="text-center mb-8">
@@ -144,7 +150,7 @@ function App() {
               startNode={startNode}
               setStartNode={setStartNode}
               availableNodes={graph.nodes.map(node => ({ id: node.id, label: node.label }))}
-              onClearGraph={clearGraph}
+              onClearGraph={handleClearGraph}
             />
           </div>
 
