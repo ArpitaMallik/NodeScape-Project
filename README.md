@@ -27,6 +27,8 @@ Make sure Docker is installed:
 ```bash
 docker pull arpitamallik23/nodescape-frontend:latest
 
+#Run the Frontend Container
+docker run -d -p 3000:80 arpitamallik23/nodescape-frontend
 
 ```
 
