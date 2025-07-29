@@ -5,6 +5,8 @@ import { Algorithm } from '../types/Graph';
 interface ControlPanelProps {
   algorithm: Algorithm;
   setAlgorithm: (algorithm: Algorithm) => void;
+  isDirected: boolean;
+  onToggleDirected: () => void;
   isPlaying: boolean;
   onPlay: () => void;
   onPause: () => void;
@@ -19,8 +21,9 @@ interface ControlPanelProps {
 }
 
 export const ControlPanel: React.FC<ControlPanelProps> = ({
-  algorithm,
+   algorithm,
   setAlgorithm,
+  isDirected,
   isPlaying,
   onPlay,
   onPause,
@@ -31,12 +34,43 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
   startNode,
   setStartNode,
   availableNodes,
-  onClearGraph
-}) => {
+  onClearGraph,
+  onToggleDirected,
+}) => { 
+
   return (
     <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 shadow-2xl border border-white/20">
       <h3 className="text-xl font-bold text-white mb-4">Algorithm Controls</h3>
       
+      {/* Graph Type Selection */}
+      <div className="mb-6">
+        <label className="block text-sm font-medium text-white/80 mb-2">
+          Graph Type
+        </label>
+        <div className="flex gap-2">
+          <button
+            onClick={onToggleDirected}
+            className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
+              !isDirected
+                ? 'bg-green-500 text-white shadow-lg shadow-green-500/30'
+                : 'bg-white/10 text-white/70 hover:bg-white/20'
+            }`}
+          >
+            Undirected
+          </button>
+          <button
+            onClick={onToggleDirected}
+            className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
+              isDirected
+                ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/30'
+                : 'bg-white/10 text-white/70 hover:bg-white/20'
+            }`}
+          >
+            Directed
+          </button>
+        </div>
+      </div>
+
       {/* Algorithm Selection */}
       <div className="mb-6">
         <label className="block text-sm font-medium text-white/80 mb-2">

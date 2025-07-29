@@ -20,7 +20,10 @@ export class GraphTraversal {
     // Add edges (undirected graph)
     this.graph.edges.forEach(edge => {
       adj.get(edge.from)?.push(edge.to);
-      adj.get(edge.to)?.push(edge.from);
+      // Only add reverse edge for undirected graphs
+      if (!edge.directed) {
+        adj.get(edge.to)?.push(edge.from);
+      }
     });
 
     return adj;

@@ -1,43 +1,33 @@
-from flask import Flask, jsonify, request
+# app.py
+from flask import Flask, request, jsonify
 from flask_cors import CORS
+import torch
+from torch_geometric.data import Data
+from model import load_model, predict_graph
 
 app = Flask(__name__)
-CORS(app)  # Enable CORS so frontend can call API
+CORS(app) 
+
+model = load_model()
+
+@app.route('/api/predict-graph-type', methods=['POST'])
+def predict_graph_type():
+    data = request.json
+    edges = data.get('edges', [])
+    node_count = data.get('node_count', 0)
+
+    if not edges or node_count == 0:
+        return jsonify({'error': 'Invalid input'}), 400
+
+    try:
+        prediction, confidence = predict_graph(model, edges, node_count)
+        return jsonify({'label': prediction, 'confidence': confidence})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 @app.route("/")
-def home():
-    return "Backend is running!"
+def index():
+    return "Backend is running"
 
-@app.route("/api/bfs", methods=["POST"])
-def bfs():
-    data = request.json
-    graph = data["graph"]
-    start = data["start"]
-    visited = []
-    queue = [start]
-
-    while queue:
-        node = queue.pop(0)
-        if node not in visited:
-            visited.append(node)
-            queue.extend([n for n in graph.get(node, []) if n not in visited])
-    return jsonify({"order": visited})
-
-@app.route("/api/dfs", methods=["POST"])
-def dfs():
-    data = request.json
-    graph = data["graph"]
-    start = data["start"]
-    visited = []
-
-    def dfs_recursive(node):
-        if node not in visited:
-            visited.append(node)
-            for neighbor in graph.get(node, []):
-                dfs_recursive(neighbor)
-
-    dfs_recursive(start)
-    return jsonify({"order": visited})
-
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+if __name__ == '__main__':
+    app.run(port=5000, debug=True)

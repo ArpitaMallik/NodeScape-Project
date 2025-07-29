@@ -8,11 +8,13 @@ export interface Node {
 export interface Edge {
   from: string;
   to: string;
+  directed?: boolean;
 }
 
 export interface GraphData {
   nodes: Node[];
   edges: Edge[];
+  isDirected?: boolean;
 }
 
 export interface TraversalStep {
@@ -25,3 +27,11 @@ export interface TraversalStep {
 }
 
 export type Algorithm = 'bfs' | 'dfs';
+
+export type GraphType = 'Tree' | 'Cyclic' | 'DAG';
+
+export interface GraphPrediction {
+  type: GraphType;
+  confidence: number;
+  label: number;
+}

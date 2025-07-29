@@ -6,6 +6,7 @@ import { GraphEdge } from './GraphEdge';
 interface GraphCanvasProps {
   graph: GraphData;
   selectedNodes: string[];
+  isDirected: boolean;
   currentStep: TraversalStep | null;
   onNodeClick: (nodeId: string) => void;
   onNodeDoubleClick: (nodeId: string) => void;
@@ -15,6 +16,7 @@ interface GraphCanvasProps {
 export const GraphCanvas: React.FC<GraphCanvasProps> = ({
   graph,
   selectedNodes,
+  isDirected,
   currentStep,
   onNodeClick,
   onNodeDoubleClick,
@@ -49,8 +51,15 @@ export const GraphCanvas: React.FC<GraphCanvasProps> = ({
     <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 shadow-2xl border border-white/20">
       <div className="flex justify-between items-center mb-4">
         <h3 className="text-xl font-bold text-white">Graph Visualization</h3>
-        <div className="text-sm text-white/60">
-          Click empty space to add nodes • Click nodes to connect • Double-click to remove
+        <div className="text-sm text-white/60 flex items-center gap-4">
+          <span>Click empty space to add nodes • Click nodes to connect • Double-click to remove</span>
+          <span className={`px-2 py-1 rounded text-xs font-medium ${
+            isDirected 
+              ? 'bg-orange-500/20 text-orange-200 border border-orange-500/30' 
+              : 'bg-green-500/20 text-green-200 border border-green-500/30'
+          }`}>
+            {isDirected ? 'Directed' : 'Undirected'}
+          </span>
         </div>
       </div>
       
@@ -81,6 +90,7 @@ export const GraphCanvas: React.FC<GraphCanvasProps> = ({
                 from={fromNode}
                 to={toNode}
                 isActive={isEdgeActive(edge.from, edge.to)}
+                isDirected={edge.directed}
               />
             );
           })}

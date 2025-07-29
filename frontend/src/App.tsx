@@ -4,10 +4,11 @@ import { GraphTraversal } from './algorithms/traversal';
 import { GraphCanvas } from './components/GraphCanvas';
 import { ControlPanel } from './components/ControlPanel';
 import { TraversalInfo } from './components/TraversalInfo';
+import { MLPrediction } from './components/MLPrediction';
 import { Algorithm, TraversalStep } from './types/Graph';
 
 function App() {
-  const { graph, selectedNodes, addNode, removeNode, selectNode, clearGraph } = useGraph();
+  const { graph, selectedNodes, isDirected, addNode, removeNode, selectNode, clearGraph, toggleDirected } = useGraph();
   const [algorithm, setAlgorithm] = useState<Algorithm>('bfs');
   const [startNode, setStartNode] = useState<string | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -109,7 +110,7 @@ function App() {
   }, [graph.nodes, startNode]);
 
   return (
-    <div className="min-h-screen bg-blue-950">
+    <div className="min-h-screen bg-gradient-to-br from-blue-950 via-blue-900 to-slate-900">
       <div className="container mx-auto px-6 py-8">
         {/* Header */}
         <div className="text-center mb-8">
@@ -122,12 +123,13 @@ function App() {
         </div>
 
         {/* Main Content */}
-        <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 xl:grid-cols-5 gap-6">
           {/* Graph Canvas - Takes up 2 columns */}
           <div className="xl:col-span-2">
             <GraphCanvas
               graph={graph}
               selectedNodes={selectedNodes}
+              isDirected={isDirected}
               currentStep={currentStep}
               onNodeClick={selectNode}
               onNodeDoubleClick={removeNode}
@@ -140,6 +142,8 @@ function App() {
             <ControlPanel
               algorithm={algorithm}
               setAlgorithm={setAlgorithm}
+              isDirected={isDirected}
+              onToggleDirected={toggleDirected}
               isPlaying={isPlaying}
               onPlay={handlePlay}
               onPause={handlePause}
@@ -163,15 +167,20 @@ function App() {
               nodes={graph.nodes.map(node => ({ id: node.id, label: node.label }))}
             />
           </div>
+
+          {/* ML Prediction */}
+          <div>
+            <MLPrediction graph={graph} />
+          </div>
         </div>
 
         {/* Instructions */}
         <div className="mt-8 bg-white/10 backdrop-blur-md rounded-2xl p-6 shadow-2xl border border-white/20">
           <h3 className="text-xl font-bold text-white mb-4">How to Use</h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-white/80">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-white/80">
             <div>
               <h4 className="font-semibold text-white mb-2">1. Build Your Graph</h4>
-              <p className="text-sm">Click on empty space to add nodes. Click two nodes to connect them with an edge. Double-click nodes to remove them.</p>
+              <p className="text-sm">Click on empty space to add nodes. Toggle between directed/undirected mode. Click two nodes to connect them with an edge. Double-click nodes to remove them.</p>
             </div>
             <div>
               <h4 className="font-semibold text-white mb-2">2. Configure Algorithm</h4>
@@ -180,6 +189,10 @@ function App() {
             <div>
               <h4 className="font-semibold text-white mb-2">3. Visualize Traversal</h4>
               <p className="text-sm">Click Play to start the visualization. Watch as the algorithm explores the graph step by step, with real-time updates.</p>
+            </div>
+            <div>
+              <h4 className="font-semibold text-white mb-2">4. ML Classification</h4>
+              <p className="text-sm">Use the ML model to classify your graph as Tree, Cyclic, or DAG. The model analyzes the graph structure and provides confidence scores.</p>
             </div>
           </div>
         </div>

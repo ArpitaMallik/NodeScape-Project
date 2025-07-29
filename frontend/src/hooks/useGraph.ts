@@ -1,9 +1,10 @@
 import { useState, useCallback } from 'react';
-import { Node, Edge, GraphData } from '../types/Graph';
+import { GraphData } from '../types/Graph';
 
 export const useGraph = () => {
   const [graph, setGraph] = useState<GraphData>({ nodes: [], edges: [] });
   const [selectedNodes, setSelectedNodes] = useState<string[]>([]);
+  const [isDirected, setIsDirected] = useState(false);
 
   const addNode = useCallback((x: number, y: number) => {
     const id = `node-${Date.now()}`;
@@ -35,10 +36,10 @@ export const useGraph = () => {
     if (!edgeExists) {
       setGraph(prev => ({
         ...prev,
-        edges: [...prev.edges, { from, to }]
+        edges: [...prev.edges, { from, to, directed: isDirected }]
       }));
     }
-  }, [graph.edges]);
+  }, [graph.edges, isDirected]);
 
   const selectNode = useCallback((nodeId: string) => {
     setSelectedNodes(prev => {
@@ -61,12 +62,26 @@ export const useGraph = () => {
     setSelectedNodes([]);
   }, []);
 
+  const toggleDirected = useCallback(() => {
+  setIsDirected(prevIsDirected => {
+    const newDirected = !prevIsDirected;
+    setGraph(prev => ({
+      ...prev,
+      edges: prev.edges.map(edge => ({ ...edge, directed: newDirected }))
+    }));
+    return newDirected;
+  });
+}, []);
+
+
   return {
     graph,
     selectedNodes,
+    isDirected,
     addNode,
     removeNode,
     selectNode,
-    clearGraph
+    clearGraph,
+    toggleDirected
   };
 };
